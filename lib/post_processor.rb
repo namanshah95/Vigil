@@ -12,30 +12,27 @@ class PostProcessor
     return returned
   end
 
-  # Lets us process the ratings in a seperate action
-  def self.process_ratings preprocessed_data
+  # Lets us process the danger_ratings in a seperate action
+  def self.process_danger_ratings preprocessed_data
     banks = preprocessed_data[0].map{|e| e.to_s}.first(9)
-    ratings = preprocessed_data[1].map{|e| e.to_s}.first(9)
+    danger_ratings = preprocessed_data[1].map{|e| e.to_s}.first(9)
     dates = preprocessed_data[2].map{|e| e.to_s}.first(9)
-    
-    ratings.reject!{|r| r == "Not Rated"}
 
-    ratings = ratings.map do |r|
+    danger_ratings.reject!{|r| r == "Not Rated"}
+
+    danger_ratings = danger_ratings.map do |r|
       r.include?("&rarr\;") ? r.split("&rarr\;").last.strip : r
     end
 
-    ratings = ratings.map do |r| 
-      if ["Positive", "Outperform", "Overweight", "Buy", "Sector Outperform", "Market Outperform", "Mkt Outperform", "Sector Overperform", "Market Overperform", "Mkt Overperform"].include? r
-        "Buy"
-      elsif ["Perform", "Equal Weight", "Hold", "Sector Perform", "Market Perform", "Mkt Perform", "Neutral", "Fair Value"].include? r
-        "Hold"
-      elsif ["Negative", "Underperform", "Underweight", "Sell", "Sector Underperform", "Market Underperform", "Mkt Underperform"].include? r
-        "Sell"
+    danger_ratings = danger_ratings.map do |r|
+      if ["High"]
+      elsif ["Medium"]
+      elsif ["Low"]
       end
     end
-    
-    ratings = ratings
-    data = banks.zip(ratings, dates)
+
+    danger_ratings = danger_ratings
+    data = banks.zip(danger_ratings, dates)
   end
 
   def self.process_prices preprocessed_data
