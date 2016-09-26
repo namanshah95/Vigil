@@ -13,20 +13,17 @@ namespace :data do
     open(path_to_zip, 'wb') do |file|
       file << open(url).read
     end
-    puts "Test3"    
     # Unzip and extract COBRAXXXXXX.xls (raw crime data)
     Zip::File.open(path_to_zip) do |zip_file|
       excel = zip_file.glob('COBRA*.xlsx').first
+    puts 'yo'
       open(path_to_excel, 'wb') do |excel_file|
         excel_file << excel.get_input_stream.read
       end
     end
-    puts "Test2"    
     # Open excel file
     excel_file = Roo::Spreadsheet.open(path_to_excel) 
     puts excel_file.info
-    puts "Test"
-    puts excel_file
 
   end
 
